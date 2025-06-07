@@ -33,7 +33,8 @@ import cookieParser from "cookie-parser";
 console.log(corsOptions);
 
 // cors
-// app.options("*", cors(corsOptions));
+// exp v5 wildcart * must have a name
+app.options("/*splat", cors(corsOptions));
 app.use(cors(corsOptions));
 
 // cookie parser
@@ -59,8 +60,9 @@ app.use((req, res, next) => {
 // Serve static files from "public" for index.html
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "public", "index.html"));
-// });
+// exp v5 wildcart * must have a name
+app.get("/*splat", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 export default app;
