@@ -60,6 +60,9 @@ app.use((req, res, next) => {
 // Serve static files from "public" for index.html
 app.use(express.static(path.join(__dirname, "public")));
 
+import router from "./routes/index.js";
+app.use("/api", router);
+
 // exp v5 wildcart * must have a name
 app.get("/*splat", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
