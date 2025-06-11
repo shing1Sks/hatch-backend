@@ -4,6 +4,23 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { getAuth } from "@clerk/express";
 import { v2 as cloudinary } from "cloudinary";
 
+const setupAccount = asyncHandler(async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+  const { username } = req.body;
+
+  const profile = await Profile.findOne({ userId });
+
+  if (profile) {
+    return res.status(200).json({ message: "Profile already exists" });
+  }
+
+  const newProfile = new Profile({ userId, username });
+  await newProfile.save();
+
+  res.status(200).json({ message: "Profile created successfully" });
+});
+
 const updateProfilePic = asyncHandler(async (req, res) => {
   const auth = getAuth(req);
   const userId = auth.userId;
@@ -62,4 +79,4 @@ const updateProfilePic = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Profile picture updated successfully" });
 });
 
-export { updateProfilePic };
+export { setupAccount, updateProfilePic };
