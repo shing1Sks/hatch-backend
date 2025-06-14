@@ -1,4 +1,8 @@
-import { updateProfilePic } from "../controllers/profiles.controllers.js";
+import {
+  updateProfilePic,
+  setupAccount,
+  updateAbout,
+} from "../controllers/profiles.controllers.js";
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import { requireAuth } from "@clerk/express";
@@ -12,5 +16,9 @@ router.post(
   upload.single("profilePic"),
   updateProfilePic
 );
+
+router.post("/setup-account", setupAccount);
+
+router.post("/update-about", updateAbout);
 
 export default router;

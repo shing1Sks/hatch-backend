@@ -79,4 +79,20 @@ const updateProfilePic = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Profile picture updated successfully" });
 });
 
-export { setupAccount, updateProfilePic };
+const updateAbout = asyncHandler(async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth.userId;
+  const { about } = req.body;
+
+  const profile = await Profile.findOne({ userId });
+  if (!profile) {
+    return res.status(404).json({ message: "Profile not found" });
+  }
+
+  profile.about = about;
+  await profile.save();
+
+  res.status(200).json({ message: "About updated successfully" });
+});
+
+export { setupAccount, updateProfilePic, updateAbout };
