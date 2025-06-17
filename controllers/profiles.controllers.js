@@ -12,13 +12,13 @@ const setupAccount = asyncHandler(async (req, res) => {
   const profile = await Profile.findOne({ userId });
 
   if (profile) {
-    return res.status(200).json({ message: "Profile already exists" });
+    return res.status(200).json({ message: "Profile already exists", profile });
   }
 
   const newProfile = new Profile({ userId, username });
   await newProfile.save();
 
-  res.status(200).json({ message: "Profile created successfully" });
+  res.status(200).json({ message: "Profile created successfully", newProfile });
 });
 
 const updateProfilePic = asyncHandler(async (req, res) => {
