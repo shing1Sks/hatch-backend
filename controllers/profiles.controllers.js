@@ -83,32 +83,15 @@ const updateAbout = asyncHandler(async (req, res) => {
   const auth = getAuth(req);
   const userId = auth.userId;
   const { about } = req.body;
-
   const profile = await Profile.findOne({ userId });
+
   if (!profile) {
     return res.status(404).json({ message: "Profile not found" });
   }
 
-  profile.about = about;
+  profile.description = about;
   await profile.save();
-
-  res.status(200).json({ message: "About updated successfully" });
-});
-
-const saveBio = asyncHandler(async (req, res) => {
-  const auth = getAuth(req);
-  const userId = auth.userId;
-  const { bio } = req.body;
-
-  const profile = await Profile.findOne({ userId });
-  if (!profile) {
-    return res.status(404).json({ message: "Profile not found" });
-  }
-
-  profile.description = bio;
-  await profile.save();
-
-  res.status(200).json({ message: "Bio updated successfully" });
+  res.status(200).json({ message: "About updated successfully", profile });
 });
 
 const addSocialLink = asyncHandler(async (req, res) => {
@@ -124,7 +107,7 @@ const addSocialLink = asyncHandler(async (req, res) => {
   profile.profiles.push({ link, tag });
   await profile.save();
 
-  res.status(200).json({ message: "Social link added successfully" });
+  res.status(200).json({ message: "Social link added successfully", profile });
 });
 
 const removeSocialLink = asyncHandler(async (req, res) => {
@@ -144,14 +127,15 @@ const removeSocialLink = asyncHandler(async (req, res) => {
   profile.profiles = updatedProfiles;
   await profile.save();
 
-  res.status(200).json({ message: "Social link removed successfully" });
+  res
+    .status(200)
+    .json({ message: "Social link removed successfully", profile });
 });
 
 export {
   setupAccount,
   updateProfilePic,
   updateAbout,
-  saveBio,
   addSocialLink,
   removeSocialLink,
 };
