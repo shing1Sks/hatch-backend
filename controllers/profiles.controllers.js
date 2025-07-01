@@ -76,7 +76,10 @@ const updateProfilePic = asyncHandler(async (req, res) => {
   profile.image = cloudinaryResponse.secure_url;
   await profile.save();
 
-  res.status(200).json({ message: "Profile picture updated successfully" });
+  res.status(200).json({
+    message: "Profile picture updated successfully",
+    image: profile.image,
+  });
 });
 
 const updateAbout = asyncHandler(async (req, res) => {
