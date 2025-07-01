@@ -63,7 +63,7 @@ const updateProfilePic = asyncHandler(async (req, res) => {
       return publicId;
     };
 
-    const publicId = extractPublicId(project.image);
+    const publicId = extractPublicId(profile.image);
 
     try {
       // Delete image from Cloudinary
