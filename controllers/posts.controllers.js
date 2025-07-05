@@ -18,4 +18,62 @@ const getUserPosts = asyncHandler(async (req, res) => {
   res.status(200).json({ posts });
 });
 
-export { getUserPosts };
+const createPost = asyncHandler(async (req, res) => {
+  const {
+    username,
+    title,
+    description,
+    type = "post",
+    applicationOpen = false,
+    links = [],
+  } = req.body;
+
+  // Validate required fields
+  if (!username || !title || !description) {
+    return res.status(400).json({
+      success: false,
+      message: "username, title, and description are required.",
+    });
+  }
+
+  let imageUrl = null;
+
+  // If image is uploaded
+  if (req.file) {
+    const localFilePath = req.file.path;
+    const cloudinaryResult = await uploadOnCloudinary(localFilePath);
+
+    // Delete local temp file
+    fs.unlink(localFilePath, (err) => {
+      if (err) console.warn("Error cleaning up temp file:", err.message);
+    });
+
+    if (!cloudinaryResult || !cloudinaryResult.secure_url) {
+      return res
+        .status(500)
+        .json({ message: "Image upload to Cloudinary failed." });
+    }
+
+    imageUrl = cloudinaryResult.secure_url;
+  }
+
+  const newPost = new Post({
+    username,
+    title,
+    description,
+    type: type === "project" ? "project" : "post",
+    applicationOpen: type === "project" ? applicationOpen : false,
+    image: imageUrl,
+    links,
+  });
+
+  const savedPost = await newPost.save();
+
+  res.status(201).json({
+    success: true,
+    message: "Post created successfully",
+    post: savedPost,
+  });
+});
+
+export { getUserPosts, createPost };
