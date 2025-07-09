@@ -18,6 +18,13 @@ const getUserPosts = asyncHandler(async (req, res) => {
   res.status(200).json({ posts });
 });
 
+const getAllPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find()
+    .sort({ createdAt: -1 })
+    .populate("applications replies upvotes");
+  res.status(200).json({ success: true, posts });
+});
+
 const createPost = asyncHandler(async (req, res) => {
   const {
     username,
@@ -76,4 +83,4 @@ const createPost = asyncHandler(async (req, res) => {
   });
 });
 
-export { getUserPosts, createPost };
+export { getUserPosts, createPost, getAllPosts };
